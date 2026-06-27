@@ -1,43 +1,70 @@
-//
-//  MuhasebeUITests.swift
-//  MuhasebeUITests
-//
-//  Created by Yunus Emre Gürlek on 27.06.2026.
-//
-
 import XCTest
 
 final class MuhasebeUITests: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testWalkthrough() throws {
         let app = XCUIApplication()
         app.launch()
-
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // XCUIAutomation Documentation
-        // https://developer.apple.com/documentation/xcuiautomation
-    }
-
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
+        
+        let unlockButton = app.buttons["unlockButton"]
+        if unlockButton.waitForExistence(timeout: 5) {
+            unlockButton.tap()
         }
+        
+        sleep(4)
+        
+        let tabLedger = app.tabBars.buttons["Ledger"]
+        if tabLedger.waitForExistence(timeout: 5) {
+            tabLedger.tap()
+        }
+        
+        sleep(2)
+        
+        let googleRow = app.staticTexts["Google Workspace"]
+        if googleRow.waitForExistence(timeout: 5) {
+            googleRow.tap()
+        }
+        
+        sleep(3)
+        
+        let closeButton = app.buttons["closeButton"]
+        if closeButton.waitForExistence(timeout: 5) {
+            closeButton.tap()
+        }
+        
+        sleep(2)
+        
+        let tabInsights = app.tabBars.buttons["Insights"]
+        if tabInsights.waitForExistence(timeout: 5) {
+            tabInsights.tap()
+        }
+        
+        sleep(3)
+        
+        let tabVault = app.tabBars.buttons["The Vault"]
+        if tabVault.waitForExistence(timeout: 5) {
+            tabVault.tap()
+        }
+        
+        sleep(2)
+        
+        let invoicesFolder = app.buttons["folder_Invoices"]
+        if invoicesFolder.waitForExistence(timeout: 5) {
+            invoicesFolder.tap()
+        }
+        
+        sleep(2)
+        
+        let uploadButton = app.buttons["uploadButton"]
+        if uploadButton.waitForExistence(timeout: 5) {
+            uploadButton.tap()
+        }
+        
+        sleep(5)
     }
 }

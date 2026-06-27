@@ -60,6 +60,7 @@ struct TransactionsView: View {
 
                             TextField("Search vendor, category...", text: $state.searchQuery)
                                 .font(.system(size: 15))
+                                .accessibilityIdentifier("searchField")
                                 .foregroundColor(Color.black.opacity(0.85))
                                 .padding(.vertical, 10)
                                 .padding(.trailing, 12)
@@ -158,6 +159,7 @@ struct TransactionsView: View {
                                         .onTapGesture {
                                             selectedTransaction = tx
                                         }
+                                        .accessibilityIdentifier("transactionRow_\(tx.vendor)")
                                 }
                             }
                             .padding(.horizontal, 16)
@@ -328,6 +330,7 @@ struct TransactionDetailSheet: View {
                         .background(Theme.primary)
                         .cornerRadius(14)
                 }
+                .accessibilityIdentifier("closeButton")
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             }

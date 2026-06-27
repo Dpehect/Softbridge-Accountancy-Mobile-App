@@ -102,11 +102,11 @@ struct AnalyticsView: View {
                                     VStack(spacing: 10) {
                                         ForEach(expenseData.indices, id: \.self) { index in
                                             let item = expenseData[index]
+                                            let isSelected = selectedDonutIndex == index
                                             let gradients = [Theme.saasGradient, Theme.marketingGradient, Theme.opsGradient, Theme.revenueGradient]
                                             let activeGradient = gradients[index % gradients.count]
-                                            let isSelected = selectedDonutIndex == index
 
-                                            HStack {
+                                            HStack(spacing: 8) {
                                                 Circle()
                                                     .fill(activeGradient)
                                                     .frame(width: 10, height: 10)
@@ -121,6 +121,7 @@ struct AnalyticsView: View {
                                                     .font(.system(size: 14, weight: isSelected ? .bold : .semibold, design: .monospaced))
                                                     .foregroundColor(isSelected ? Theme.primary : Color.black.opacity(0.8))
                                             }
+                                            .accessibilityIdentifier("legend_\(item.label)")
                                             .padding(.horizontal, 12)
                                             .padding(.vertical, 8)
                                             .background(isSelected ? Theme.primary.opacity(0.06) : Color.clear)

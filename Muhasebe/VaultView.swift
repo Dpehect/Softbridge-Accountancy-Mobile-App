@@ -62,6 +62,7 @@ struct VaultView: View {
                                 .background(Theme.primary)
                                 .cornerRadius(10)
                             }
+                            .accessibilityIdentifier("uploadButton")
                         }
                         .padding(.horizontal, 16)
 
@@ -125,6 +126,7 @@ struct VaultView: View {
                                         )
                                         .modifier(CardShadowModifier())
                                     }
+                                    .accessibilityIdentifier("folder_\(folder.name)")
                                 }
                             }
                             .padding(.horizontal, 16)

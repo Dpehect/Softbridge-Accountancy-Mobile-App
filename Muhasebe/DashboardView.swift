@@ -215,6 +215,7 @@ struct PendingTransactionRow: View {
                             .background(Theme.primary)
                             .cornerRadius(12)
                     }
+                    .accessibilityIdentifier("approveButton")
                 }
             }
         }
@@ -305,6 +306,7 @@ struct BiometricLockOverlay: View {
                     }
                     .disabled(isAuthenticating)
                     .buttonStyle(PlainButtonStyle())
+                    .accessibilityIdentifier("unlockButton")
                 }
                 .padding(.vertical, 32)
                 .padding(.horizontal, 24)
