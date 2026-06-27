@@ -62,7 +62,7 @@ A folder-based directory showing receipt files and tax agreements.
 
 Below is the screen recording capturing the application execution, including biometrics authorization, transaction approval, ledger search filters, share sheet export, interactive chart dragging, and document upload scanning.
 
-![Soft Bridge Solutions Application Demonstration](./Media/walkthrough.mp4)
+<video src="./Media/walkthrough.mp4" controls width="100%" poster="./Media/screenshot.png"></video>
 
 ---
 
