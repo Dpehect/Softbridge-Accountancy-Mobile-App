@@ -1,23 +1,16 @@
-//
-//  VaultView.swift
-//  Muhasebe
-//
-//  Created by Soft Bridge Solutions UI/UX on 27.06.2026.
-//
-
 import SwiftUI
 
 struct VaultView: View {
     @EnvironmentObject var state: AppState
     @State private var activeFolderFilter: String = "All"
     @State private var selectedDocument: VaultDocument? = nil
-    
+
     let folders = [
         (name: "Receipts", icon: "doc.text.fill", count: "12 files"),
         (name: "Invoices", icon: "doc.plaintext.fill", count: "8 files"),
         (name: "Tax Audits", icon: "shield.doc.fill", count: "3 files")
     ]
-    
+
     var filteredDocuments: [VaultDocument] {
         if activeFolderFilter == "All" {
             return state.documents
@@ -25,34 +18,32 @@ struct VaultView: View {
             return state.documents.filter { $0.category == activeFolderFilter }
         }
     }
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 Theme.background
                     .ignoresSafeArea()
-                
+
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
-                        
-                        // Header and upload button
+
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("THE VAULT")
                                     .font(.system(size: 11, weight: .bold, design: .rounded))
                                     .foregroundColor(Theme.primary)
                                     .tracking(1.5)
-                                
+
                                 Text("Documents")
                                     .font(.system(size: 28, weight: .bold, design: .rounded))
                                     .foregroundColor(Color.black.opacity(0.85))
                             }
                             Spacer()
-                            
-                            // Quick Upload trigger button
+
                             Button(action: {
                                 withAnimation(Theme.fluidSpring) {
-                                    // Simulate upload of a Stripe billing report
+
                                     state.startSimulatedUpload(
                                         title: "Stripe_Payout_Report_\(Int.random(in: 10...99)).pdf",
                                         category: activeFolderFilter == "All" ? "Receipts" : activeFolderFilter
@@ -73,19 +64,18 @@ struct VaultView: View {
                             }
                         }
                         .padding(.horizontal, 16)
-                        
-                        // Folders segment
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text("FOLDERS")
                                 .font(.system(size: 11, weight: .bold, design: .rounded))
                                 .foregroundColor(Theme.secondaryText)
                                 .tracking(1.5)
                                 .padding(.horizontal, 16)
-                            
+
                             HStack(spacing: 16) {
                                 ForEach(folders, id: \.name) { folder in
                                     let isSelected = activeFolderFilter == folder.name
-                                    
+
                                     Button(action: {
                                         withAnimation(Theme.fluidSpring) {
                                             if activeFolderFilter == folder.name {
@@ -107,19 +97,19 @@ struct VaultView: View {
                                                         .foregroundStyle(gradientForFolder(folder.name))
                                                 }
                                                 Spacer()
-                                                
+
                                                 if isSelected {
                                                     Circle()
                                                         .fill(Color.white)
                                                         .frame(width: 8, height: 8)
                                                 }
                                             }
-                                            
+
                                             VStack(alignment: .leading, spacing: 2) {
                                                 Text(folder.name)
                                                     .font(.system(size: 14, weight: .bold, design: .rounded))
                                                     .foregroundColor(isSelected ? .white : Color.black.opacity(0.85))
-                                                
+
                                                 Text(folder.count)
                                                     .font(.system(size: 11, design: .rounded))
                                                     .foregroundColor(isSelected ? .white.opacity(0.8) : Theme.secondaryText)
@@ -139,15 +129,14 @@ struct VaultView: View {
                             }
                             .padding(.horizontal, 16)
                         }
-                        
-                        // Dynamic files listing
+
                         VStack(alignment: .leading, spacing: 12) {
                             Text(activeFolderFilter == "All" ? "ALL FILES" : activeFolderFilter.uppercased() + " FILES")
                                 .font(.system(size: 11, weight: .bold, design: .rounded))
                                 .foregroundColor(Theme.secondaryText)
                                 .tracking(1.5)
                                 .padding(.horizontal, 16)
-                            
+
                             if filteredDocuments.isEmpty {
                                 PremiumCard(padding: 24) {
                                     VStack(spacing: 8) {
@@ -173,18 +162,17 @@ struct VaultView: View {
                                 .padding(.horizontal, 16)
                             }
                         }
-                        
+
                         Spacer(minLength: 40)
                     }
                     .padding(.top, 12)
                 }
-                
-                // OCR Upload simulation modal overlays
+
                 if state.isUploadingDocument {
                     ZStack {
                         Color.black.opacity(0.4)
                             .ignoresSafeArea()
-                        
+
                         OCRScanningView()
                             .transition(.scale)
                     }
@@ -196,7 +184,7 @@ struct VaultView: View {
             }
         }
     }
-    
+
     private func folderBackground(isSelected: Bool, folderName: String) -> some View {
         Group {
             if isSelected {
@@ -206,7 +194,7 @@ struct VaultView: View {
             }
         }
     }
-    
+
     private func gradientForFolder(_ folderName: String) -> LinearGradient {
         switch folderName.lowercased() {
         case "receipts":
@@ -221,24 +209,23 @@ struct VaultView: View {
     }
 }
 
-// Custom Cell for Documents with preview representation
 struct DocumentRow: View {
     let doc: VaultDocument
-    
+
     var body: some View {
         PremiumCard(padding: 12) {
             HStack(spacing: 12) {
-                // PDF/Receipt mini-thumbnail representation
+
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Theme.background)
                         .frame(width: 44, height: 52)
-                    
+
                     VStack(spacing: 2) {
                         Image(systemName: "doc.text")
                             .font(.system(size: 18))
                             .foregroundColor(Theme.secondaryText)
-                        
+
                         Text("PDF")
                             .font(.system(size: 8, weight: .bold, design: .rounded))
                             .foregroundColor(Theme.primary)
@@ -248,30 +235,30 @@ struct DocumentRow: View {
                             .cornerRadius(3)
                     }
                 }
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(doc.title)
                         .font(.system(size: 14, weight: .bold, design: .rounded))
                         .foregroundColor(Color.black.opacity(0.85))
                         .lineLimit(1)
-                    
+
                     HStack(spacing: 8) {
                         Text(doc.category)
                             .font(.system(size: 11, weight: .medium, design: .rounded))
                             .foregroundColor(Theme.secondaryText)
-                        
+
                         Circle()
                             .fill(Theme.border)
                             .frame(width: 3, height: 3)
-                        
+
                         Text(doc.size)
                             .font(.system(size: 11, design: .monospaced))
                             .foregroundColor(Theme.secondaryText)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 Image(systemName: "chevron.right")
                     .foregroundColor(Theme.secondaryText.opacity(0.5))
                     .font(.system(size: 14))
@@ -280,37 +267,34 @@ struct DocumentRow: View {
     }
 }
 
-// Document Viewer Mock Detail Sheet
 struct DocumentViewerSheet: View {
     @Environment(\.presentationMode) var presentationMode
     let doc: VaultDocument
-    
+
     var body: some View {
         ZStack {
             Theme.background
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
-                // Handle bar
+
                 Capsule()
                     .fill(Theme.secondaryText.opacity(0.3))
                     .frame(width: 36, height: 5)
                     .padding(.top, 12)
-                
+
                 Text(doc.title)
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.85))
                     .lineLimit(1)
                     .padding(.horizontal, 20)
-                
-                // Document Canvas Mock representation
+
                 VStack {
                     ZStack {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color.white)
                             .shadow(color: Color.black.opacity(0.04), radius: 8)
-                        
-                        // Fake Receipt layout inside
+
                         VStack(alignment: .leading, spacing: 20) {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
@@ -326,15 +310,15 @@ struct DocumentViewerSheet: View {
                                     .font(.system(size: 28))
                                     .foregroundColor(Theme.statusApproved)
                             }
-                            
+
                             Divider().background(Theme.border)
-                            
+
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("COMPLIANCE VERIFIED")
                                     .font(.system(size: 9, weight: .bold, design: .rounded))
                                     .foregroundColor(Theme.statusApproved)
                                     .tracking(1.0)
-                                
+
                                 Text("This document is verified and archived under SEC Rule 17a-4 requirements for institutional accounting.")
                                     .font(.system(size: 12, design: .rounded))
                                     .foregroundColor(Theme.secondaryText)
@@ -343,17 +327,17 @@ struct DocumentViewerSheet: View {
                             .padding(12)
                             .background(Theme.statusApprovedBg)
                             .cornerRadius(10)
-                            
+
                             VStack(spacing: 12) {
                                 InvoiceItemRow(name: "Professional Cloud Services", qty: "1", price: "$4,890.20")
                                 InvoiceItemRow(name: "Data Warehouse Integration", qty: "2", price: "$2,200.00")
                                 InvoiceItemRow(name: "Enterprise SLA Support", qty: "12", price: "$1,250.00")
                             }
-                            
+
                             Spacer()
-                            
+
                             Divider().background(Theme.border)
-                            
+
                             HStack {
                                 Text("Archived On")
                                     .font(.system(size: 12, design: .rounded))
@@ -369,10 +353,9 @@ struct DocumentViewerSheet: View {
                 }
                 .padding(.horizontal, 20)
                 .frame(maxHeight: 460)
-                
+
                 Spacer()
-                
-                // Close button
+
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -395,7 +378,7 @@ struct InvoiceItemRow: View {
     let name: String
     let qty: String
     let price: String
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
@@ -414,11 +397,10 @@ struct InvoiceItemRow: View {
     }
 }
 
-// Subview representing OCR processing container with sliding linear scanline
 struct OCRScanningView: View {
     @EnvironmentObject var state: AppState
     @State private var scanlineOffset: CGFloat = -50
-    
+
     var body: some View {
         PremiumCard(padding: 24) {
             VStack(spacing: 16) {
@@ -427,8 +409,7 @@ struct OCRScanningView: View {
                         .font(.system(size: 72))
                         .foregroundColor(Theme.primary.opacity(0.12))
                         .frame(width: 120, height: 120)
-                    
-                    // Laser scanline representing OCR process
+
                     Rectangle()
                         .fill(
                             LinearGradient(
@@ -441,27 +422,27 @@ struct OCRScanningView: View {
                         .shadow(color: Theme.primary.opacity(0.8), radius: 4)
                         .offset(y: scanlineOffset)
                         .onAppear {
-                            // GPU-optimized transition: avoids CPU redraw constraints
+
                             withAnimation(.linear(duration: 1.6).repeatForever(autoreverses: true)) {
                                 scanlineOffset = 50
                             }
                         }
                 }
-                
+
                 Text("OCR Document Parsing")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundColor(Color.black.opacity(0.85))
-                
+
                 Text("Analyzing layout, extracting line items and metadata...")
                     .font(.system(size: 12, design: .rounded))
                     .foregroundColor(Theme.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 8)
-                
+
                 VStack(spacing: 6) {
                     ProgressView(value: state.uploadProgress)
                         .accentColor(Theme.primary)
-                    
+
                     Text("\(Int(state.uploadProgress * 100))%")
                         .font(.system(size: 11, weight: .bold, design: .monospaced))
                         .foregroundColor(Theme.primary)

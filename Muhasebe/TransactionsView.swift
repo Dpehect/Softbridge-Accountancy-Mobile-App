@@ -1,28 +1,20 @@
-//
-//  TransactionsView.swift
-//  Muhasebe
-//
-//  Created by Soft Bridge Solutions UI/UX on 27.06.2026.
-//
-
 import SwiftUI
 
 struct TransactionsView: View {
     @EnvironmentObject var state: AppState
     @State private var selectedTransaction: Transaction? = nil
-    
+
     let categories = ["All", "Revenue", "SaaS", "Operations", "Marketing"]
     let statuses = ["All", "Approved", "Pending", "Void"]
-    
+
     var body: some View {
         NavigationView {
             ZStack {
                 Theme.background
                     .ignoresSafeArea()
-                
+
                 VStack(spacing: 0) {
-                    
-                    // Search and title block
+
                     VStack(alignment: .leading, spacing: 16) {
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
@@ -30,15 +22,15 @@ struct TransactionsView: View {
                                     .font(.system(size: 11, weight: .bold, design: .rounded))
                                     .foregroundColor(Theme.primary)
                                     .tracking(1.5)
-                                
+
                                 Text("Transactions")
                                     .font(.system(size: 28, weight: .bold, design: .rounded))
                                     .foregroundColor(Color.black.opacity(0.85))
                             }
                             Spacer()
-                            
+
                             HStack(spacing: 8) {
-                                // High-density record count badge
+
                                 Text("\(state.filteredTransactions.count) records")
                                     .font(.system(size: 12, weight: .bold, design: .monospaced))
                                     .foregroundColor(Theme.primary)
@@ -46,8 +38,7 @@ struct TransactionsView: View {
                                     .padding(.vertical, 6)
                                     .background(Theme.primary.opacity(0.08))
                                     .cornerRadius(8)
-                                
-                                // Native ShareLink for CSV ledger export
+
                                 ShareLink(
                                     item: state.generateLedgerCSV(),
                                     preview: SharePreview("Soft_Bridge_Ledger.csv", image: Image(systemName: "doc.text"))
@@ -61,19 +52,18 @@ struct TransactionsView: View {
                                 }
                             }
                         }
-                        
-                        // Premium search bar
+
                         HStack {
                             Image(systemName: "magnifyingglass")
                                 .foregroundColor(Theme.secondaryText)
                                 .padding(.leading, 12)
-                            
+
                             TextField("Search vendor, category...", text: $state.searchQuery)
                                 .font(.system(size: 15))
                                 .foregroundColor(Color.black.opacity(0.85))
                                 .padding(.vertical, 10)
                                 .padding(.trailing, 12)
-                            
+
                             if !state.searchQuery.isEmpty {
                                 Button(action: {
                                     state.searchQuery = ""
@@ -93,8 +83,7 @@ struct TransactionsView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 12)
-                    
-                    // Horizontal Category filters
+
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
                             ForEach(categories, id: \.self) { category in
@@ -120,8 +109,7 @@ struct TransactionsView: View {
                         .padding(.horizontal, 16)
                         .padding(.bottom, 12)
                     }
-                    
-                    // Status picker segment selector
+
                     HStack(spacing: 8) {
                         ForEach(statuses, id: \.self) { status in
                             Button(action: {
@@ -144,19 +132,18 @@ struct TransactionsView: View {
                     .cornerRadius(10)
                     .padding(.horizontal, 16)
                     .padding(.bottom, 16)
-                    
-                    // Transaction List
+
                     if state.filteredTransactions.isEmpty {
                         Spacer()
                         VStack(spacing: 12) {
                             Image(systemName: "doc.text.magnifyingglass")
                                 .font(.system(size: 48))
                                 .foregroundColor(Theme.secondaryText.opacity(0.5))
-                            
+
                             Text("No Transactions Found")
                                 .font(.system(size: 16, weight: .bold, design: .rounded))
                                 .foregroundColor(Color.black.opacity(0.85))
-                            
+
                             Text("Try adjusting your filters or search terms.")
                                 .font(.system(size: 13, design: .rounded))
                                 .foregroundColor(Theme.secondaryText)
@@ -189,54 +176,53 @@ struct TransactionsView: View {
     }
 }
 
-// Custom cell for high readability & density
 struct TransactionRow: View {
     @EnvironmentObject var state: AppState
     let transaction: Transaction
     @State private var pressScale: CGFloat = 1.0
-    
+
     var body: some View {
         PremiumCard(padding: 0) {
             HStack(spacing: 0) {
-                // Category-coded vibrant gradient vertical tag
+
                 Rectangle()
                     .fill(gradientForCategory(transaction.category))
                     .frame(width: 5)
-                
+
                 HStack(spacing: 12) {
                     VendorIcon(name: transaction.vendor, size: 40)
-                    
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text(transaction.vendor)
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundColor(Color.black.opacity(0.85))
                             .lineLimit(1)
-                        
+
                         HStack(spacing: 6) {
                             Text(transaction.category)
                                 .font(.system(size: 12, weight: .semibold, design: .rounded))
                                 .foregroundColor(Theme.secondaryText)
-                            
+
                             Circle()
                                 .fill(Theme.border)
                                 .frame(width: 3, height: 3)
-                            
+
                             Text(transaction.formattedDate)
                                 .font(.system(size: 12, design: .rounded))
                                 .foregroundColor(Theme.secondaryText)
                         }
                     }
-                    
+
                     Spacer()
-                    
+
                     VStack(alignment: .trailing, spacing: 4) {
                         let prefix = transaction.type == .income ? "+" : "-"
                         let color = transaction.type == .income ? Theme.statusApproved : Color.black.opacity(0.85)
-                        
+
                         Text("\(prefix)\(state.formatCurrency(transaction.amount))")
                             .font(.system(size: 15, weight: .bold, design: .monospaced))
                             .foregroundColor(color)
-                        
+
                         StatusBadge(status: transaction.status)
                     }
                 }
@@ -247,7 +233,7 @@ struct TransactionRow: View {
         .scaleEffect(pressScale)
         .animation(.easeOut(duration: 0.15), value: pressScale)
     }
-    
+
     private func gradientForCategory(_ category: String) -> LinearGradient {
         switch category.lowercased() {
         case "revenue":
@@ -264,36 +250,33 @@ struct TransactionRow: View {
     }
 }
 
-// Detailed Transaction Sheet
 struct TransactionDetailSheet: View {
     @EnvironmentObject var state: AppState
     @Environment(\.presentationMode) var presentationMode
     let transaction: Transaction
-    
+
     var body: some View {
         ZStack {
             Theme.background
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
-                // Handle bar
+
                 Capsule()
                     .fill(Theme.secondaryText.opacity(0.3))
                     .frame(width: 36, height: 5)
                     .padding(.top, 12)
-                
-                // Header
+
                 VStack(spacing: 8) {
                     VendorIcon(name: transaction.vendor, size: 64)
-                    
+
                     Text(transaction.vendor)
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(Color.black.opacity(0.85))
-                    
+
                     StatusBadge(status: transaction.status)
                 }
-                
-                // Info block
+
                 VStack(spacing: 0) {
                     DetailRow(title: "Amount", value: state.formatCurrency(transaction.amount), isMonospaced: true)
                     Divider().background(Theme.border)
@@ -306,19 +289,18 @@ struct TransactionDetailSheet: View {
                 .background(Color.white)
                 .cornerRadius(16)
                 .padding(.horizontal, 20)
-                
-                // Audit timeline / compliance verification
+
                 VStack(alignment: .leading, spacing: 16) {
                     Text("AUDIT TIMELINE")
                         .font(.system(size: 11, weight: .bold, design: .rounded))
                         .foregroundColor(Theme.secondaryText)
                         .tracking(1.5)
                         .padding(.horizontal, 4)
-                    
+
                     VStack(alignment: .leading, spacing: 16) {
                         TimelineNode(time: "10:30 AM", title: "Transaction Created", desc: "Logged automatically via Stripe Integration API", isCompleted: true)
                         TimelineNode(time: "10:32 AM", title: "OCR Matching completed", desc: "Matched with uploaded PDF Invoice #1920", isCompleted: true)
-                        
+
                         if transaction.status == "Approved" {
                             TimelineNode(time: "11:45 AM", title: "Controller Approved", desc: "Approved by Admin User (SE) via mobile app", isCompleted: true, isLast: true)
                         } else if transaction.status == "Pending" {
@@ -332,10 +314,9 @@ struct TransactionDetailSheet: View {
                     .cornerRadius(16)
                 }
                 .padding(.horizontal, 20)
-                
+
                 Spacer()
-                
-                // Bottom control
+
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }) {
@@ -358,7 +339,7 @@ struct DetailRow: View {
     let title: String
     let value: String
     var isMonospaced: Bool = false
-    
+
     var body: some View {
         HStack {
             Text(title)
@@ -381,21 +362,21 @@ struct TimelineNode: View {
     var isCompleted: Bool
     var isAlert: Bool = false
     var isLast: Bool = false
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack {
                 Circle()
                     .fill(isAlert ? Theme.accent : (isCompleted ? Theme.statusApproved : Theme.secondaryText.opacity(0.3)))
                     .frame(width: 10, height: 10)
-                
+
                 if !isLast {
                     Rectangle()
                         .fill(Theme.border)
                         .frame(width: 2, height: 35)
                 }
             }
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
                     Text(title)
