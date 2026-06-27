@@ -3,7 +3,17 @@
 This repository contains the source code for the high-end, multi-page corporate accounting platform designed under the Soft Bridge Solutions brand. The system is built entirely using SwiftUI, coordinating low-overhead layouts with a clean, vector-driven visual engine.
 
 ---
+## Walkthrough Demonstration Video
 
+Below is the screen recording capturing the application execution, including biometrics authorization, transaction approval, ledger search filters, share sheet export, interactive chart dragging, and document upload scanning.
+
+
+
+https://github.com/user-attachments/assets/cdf428ed-2f7d-44ad-aafc-470b7ff84e08
+
+
+
+---
 ## System Architecture
 
 The application is structured around a centralized state manager, separating database properties, calculations, and animations from the rendering layers. 
@@ -58,24 +68,9 @@ A folder-based directory showing receipt files and tax agreements.
 
 ---
 
-## Walkthrough Demonstration Video
 
-Below is the screen recording capturing the application execution, including biometrics authorization, transaction approval, ledger search filters, share sheet export, interactive chart dragging, and document upload scanning.
 
-<video src="./Media/walkthrough.mp4" controls width="100%" poster="./Media/screenshot.png"></video>
 
----
-
-## Compilation and Build Instructions
-
-To compile and launch the project locally using Xcode command-line tools:
-
-1. Locate the project path: `/Users/yunusemregurlek/Desktop/tries/Muhasebe/Muhasebe`
-2. Compile and install to the active simulator device:
-   ```bash
-   DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project Muhasebe.xcodeproj -scheme Muhasebe -sdk iphonesimulator -destination "id=5D628684-5D7B-46C3-9376-27E9C2A96B7B" clean build
-   ```
-3. Run the application:
    ```bash
    DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcrun simctl launch booted Business.Muhasebe
    ```
